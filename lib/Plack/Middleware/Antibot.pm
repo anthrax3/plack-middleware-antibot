@@ -109,6 +109,9 @@ Plack::Middleware::Antibot is a L<Plack> middleware that prevents bots from
 submitting forms. Every filter implements its own checks, so see their
 documentation.
 
+Plack::Middleware::Antibot uses scoring system (0 to 1) to determine if the
+client is a bot. Thus it can be configured to match any needs.
+
 =head2 C<$env>
 
 Some filters set additional C<$env> keys all prefixed with C<antibot.>. For
@@ -116,6 +119,11 @@ example C<TextCaptcha> filter sets C<antibot.text_captcha> to be shown to the
 user.
 
 =head2 Options
+
+=head3 B<max_score>
+
+When accumulated score reaches this amount, no more filters are run and bot is
+detected.
 
 =head3 B<filters>
 
@@ -130,7 +138,7 @@ To specify filter arguments instead of a filter name pass an array references:
     enable 'Antibot', filters => ['FakeField'], fall_through => 1;
 
 Sometimes it is needed to process detected bot yourself. This way in case of
-detection C<$env>'s key C<antibot.detected> will be set to appropriate filter.
+detection C<$env>'s key C<antibot.detected> will be set.
 
 =head2 Available filters
 
