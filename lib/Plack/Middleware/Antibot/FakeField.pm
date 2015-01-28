@@ -49,7 +49,10 @@ Plack::Middleware::Antibot::FakeField checks if a fake field was submitted. The
 field with specified name has to be present on a form, but should be invisible
 to user. This can be achieved either by CSS or by JavaScript.
 
-    <input name="antibot_fake_field" style="display:none" />
+    <div style="display:none">
+        <label>Please leave this blank</label>
+        <input name="antibot_fake_field" />
+    </div>
 
 It is better to name the field to something that makes sense but doesn't clash
 with other fields.
