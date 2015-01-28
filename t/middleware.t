@@ -59,8 +59,63 @@ subtest 'returns 200 and set env on fall through' => sub {
         my $cb = shift;
 
         my $res = $cb->(POST '/', {antibot_fake_field => 'bar'});
-        is $res->code, 200;
-        is $res->content, 'FakeField';
+        is $res->code,    200;
+        is $res->content, 1;
+    };
+};
+
+subtest 'not set env when custom response' => sub {
+    my $app = sub { [200, [], [$_[0]->{'antibot.detected'}]] };
+
+    $app = builder {
+        enable 'Session::Cookie', secret  => 123;
+        enable 'Antibot',         filters => ['Static'];
+        $app
+    };
+
+    test_psgi $app, sub {
+        my $cb = shift;
+
+        my $res = $cb->(GET '/antibot.css');
+        is $res->code,    200;
+        is $res->content, '';
+    };
+};
+
+subtest 'sets single filter score' => sub {
+    my $app = sub { [200, [], [$_[0]->{'antibot.score'}]] };
+
+    $app = builder {
+        enable 'Antibot',
+          filters      => ['FakeField'],
+          fall_through => 1;
+        $app
+    };
+
+    test_psgi $app, sub {
+        my $cb = shift;
+
+        my $res = $cb->(POST '/', {antibot_fake_field => 'bar'});
+        is $res->content, 0.8;
+    };
+};
+
+subtest 'sets multiple filter score' => sub {
+    my $app = sub { [200, [], [$_[0]->{'antibot.score'}]] };
+
+    $app = builder {
+        enable 'Session::Cookie', secret => 123;
+        enable 'Antibot',
+          filters => [['FakeField', score => 0.5], ['Static', score => 0.5]],
+          fall_through => 1;
+        $app
+    };
+
+    test_psgi $app, sub {
+        my $cb = shift;
+
+        my $res = $cb->(POST '/', {antibot_fake_field => 'bar'});
+        is $res->content, 0.75;
     };
 };
 

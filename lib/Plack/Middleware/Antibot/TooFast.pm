@@ -13,11 +13,12 @@ sub new {
 
     $self->{session_name} = $params{session_name} || 'antibot_toofast';
     $self->{timeout}      = $params{timeout}      || 1;
+    $self->{score}        = $params{score}        || 0.9;
 
     return $self;
 }
 
-sub check {
+sub execute {
     my $self = shift;
     my ($env) = @_;
 
@@ -30,10 +31,12 @@ sub check {
         my $session = Plack::Session->new($env);
 
         my $too_fast = $session->get($self->{session_name});
-        return 0 unless $too_fast && time - $too_fast > $self->{timeout};
+        unless ($too_fast && time - $too_fast > $self->{timeout}) {
+            $env->{'antibot.toofast.detected'}++;
+        }
     }
 
-    return 1;
+    return;
 }
 
 1;

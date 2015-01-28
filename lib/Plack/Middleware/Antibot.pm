@@ -7,10 +7,13 @@ use parent 'Plack::Middleware';
 
 our $VERSION = "0.01";
 
-use Plack::Util::Accessor qw(filters fall_through);
+use List::Util qw(sum reduce);
+use Plack::Util::Accessor qw(filters fall_through max_score);
 
 sub prepare_app {
     my $self = shift;
+
+    $self->{max_score} ||= 0.8;
 
     my $filters_names = $self->filters;
 
@@ -20,7 +23,7 @@ sub prepare_app {
         if (ref $filter eq 'ARRAY') {
             my $ref = $filter;
             $filter = shift @$ref;
-            @args = @$ref;
+            @args   = @$ref;
         }
 
         my $filter_class = __PACKAGE__ . '::' . $filter;
@@ -40,18 +43,37 @@ sub call {
     my $self = shift;
     my ($env) = @_;
 
-    my $detected;
+    my @scores;
+    my $current_score = 0;
     foreach my $filter (@{$self->filters}) {
-        if (!$filter->check($env)) {
-            $detected = $filter;
-            last;
+        my $res = $filter->execute($env);
+        return $res if $res && ref $res eq 'ARRAY';
+
+        my $name = (split /::/, ref $filter)[-1];
+        my $key = 'antibot.' . lc($name) . '.detected';
+
+        if ($env->{$key}) {
+            push @scores, $filter->score;
+
+            if (@scores > 1) {
+                my $p = sum @scores;
+                my $q = reduce { $a * $b } @scores;
+
+                $current_score = $p - $q;
+            }
+            else {
+                $current_score = $filter->score;
+            }
         }
+
+        last if $current_score >= $self->max_score;
     }
 
-    if ($detected) {
+    $env->{'antibot.score'} = $current_score;
+
+    if ($current_score >= $self->max_score) {
         if ($self->fall_through) {
-            my $name = (split /::/, ref $detected)[-1];
-            $env->{'antibot.detected'} = $name;
+            $env->{'antibot.detected'} = 1;
         }
         else {
             return [400, [], ['Bad request']];
@@ -117,6 +139,10 @@ detection C<$env>'s key C<antibot.detected> will be set to appropriate filter.
 =item L<Plack::Middleware::Antibot::FakeField> (requires L<Plack::Session>)
 
 Check if an invisible or hidden field is submitted.
+
+=item L<Plack::Middleware::Antibot::Static> (requires L<Plack::Session>)
+
+Check if a static file was fetched before form submission.
 
 =item L<Plack::Middleware::Antibot::TextCaptcha> (requires L<Plack::Session>)
 

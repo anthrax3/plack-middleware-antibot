@@ -7,25 +7,31 @@ use HTTP::Request::Common;
 use HTTP::Message::PSGI qw(req_to_psgi);
 use Plack::Middleware::Antibot::FakeField;
 
-subtest 'returns true when not POST' => sub {
+subtest 'sets nothing when not POST' => sub {
     my $filter = _build_filter();
 
     my $env = req_to_psgi GET '/';
-    ok $filter->check($env);
+    $filter->execute($env);
+
+    ok !$env->{'antibot.fakefield.detected'};
 };
 
-subtest 'returns true when field not present' => sub {
+subtest 'sets nothing when field not present' => sub {
     my $filter = _build_filter();
 
     my $env = req_to_psgi POST '/', {foo => 'bar'};
-    ok $filter->check($env);
+    $filter->execute($env);
+
+    ok !$env->{'antibot.fakefield.detected'};
 };
 
-subtest 'returns false when field present' => sub {
+subtest 'sets true when field present' => sub {
     my $filter = _build_filter();
 
     my $env = req_to_psgi POST '/', {antibot_fake_field => 'bar'};
-    ok !$filter->check($env);
+    $filter->execute($env);
+
+    ok $env->{'antibot.fakefield.detected'};
 };
 
 sub _build_filter {

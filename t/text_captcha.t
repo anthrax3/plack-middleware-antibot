@@ -7,12 +7,14 @@ use HTTP::Request::Common;
 use HTTP::Message::PSGI qw(req_to_psgi);
 use Plack::Middleware::Antibot::TextCaptcha;
 
-subtest 'returns true when GET' => sub {
+subtest 'sets nothing when GET' => sub {
     my $filter = _build_filter();
 
     my $env = _build_env(GET '/');
 
-    ok $filter->check($env);
+    $filter->execute($env);
+
+    ok !$env->{'antibot.textcaptcha.detected'};
 };
 
 subtest 'sets session when GET' => sub {
@@ -20,7 +22,7 @@ subtest 'sets session when GET' => sub {
 
     my $env = _build_env(GET '/');
 
-    $filter->check($env);
+    $filter->execute($env);
 
     is $env->{'psgix.session'}->{antibot_textcaptcha}, 4;
 };
@@ -30,36 +32,42 @@ subtest 'sets env when GET' => sub {
 
     my $env = _build_env(GET '/');
 
-    $filter->check($env);
+    $filter->execute($env);
 
-    is $env->{'antibot.text_captcha'}, '2 + 2';
+    is $env->{'antibot.textcaptcha.text'}, '2 + 2';
 };
 
-subtest 'returns false when no session when POST' => sub {
+subtest 'sets true when no session when POST' => sub {
     my $filter = _build_filter();
 
     my $env = _build_env(POST '/');
 
-    ok !$filter->check($env);
+    $filter->execute($env);
+
+    ok $env->{'antibot.textcaptcha.detected'};
 };
 
-subtest 'returns false when no field when POST' => sub {
+subtest 'sets true when no field when POST' => sub {
     my $filter = _build_filter();
 
     my $env = _build_env(POST '/', {});
 
-    ok !$filter->check($env);
+    $filter->execute($env);
+
+    ok $env->{'antibot.textcaptcha.detected'};
 };
 
-subtest 'returns false when wrong answer when POST' => sub {
+subtest 'sets true when wrong answer when POST' => sub {
     my $filter = _build_filter();
 
     my $env = _build_env(POST '/', {antibot_textcaptcha => 'abc'});
 
-    ok !$filter->check($env);
+    $filter->execute($env);
+
+    ok $env->{'antibot.textcaptcha.detected'};
 };
 
-subtest 'returns true when POST' => sub {
+subtest 'sets nothing when POST' => sub {
     my $filter = _build_filter();
 
     my $env = _build_env(
@@ -67,7 +75,9 @@ subtest 'returns true when POST' => sub {
         'psgix.session' => {antibot_textcaptcha => '123'}
     );
 
-    ok $filter->check($env);
+    $filter->execute($env);
+
+    ok !$env->{'antibot.textcaptcha.detected'};
 };
 
 sub _build_env {

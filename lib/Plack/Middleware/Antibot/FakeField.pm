@@ -12,20 +12,22 @@ sub new {
     my (%params) = @_;
 
     $self->{field_name} = $params{field_name} || 'antibot_fake_field';
+    $self->{score}      = $params{score}      || 0.8;
 
     return $self;
 }
 
-sub check {
+sub execute {
     my $self = shift;
     my ($env) = @_;
 
     if ($env->{REQUEST_METHOD} eq 'POST') {
-        return 0
-          if defined Plack::Request->new($env)->param($self->{field_name});
+        if (defined Plack::Request->new($env)->param($self->{field_name})) {
+            $env->{'antibot.fakefield.detected'}++;
+        }
     }
 
-    return 1;
+    return;
 }
 
 1;

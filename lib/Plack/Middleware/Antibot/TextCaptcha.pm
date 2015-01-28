@@ -19,7 +19,7 @@ sub new {
     return $self;
 }
 
-sub check {
+sub execute {
     my $self = shift;
     my ($env) = @_;
 
@@ -27,7 +27,7 @@ sub check {
         my $variants = $self->{variants};
 
         my $captcha = $variants->[int(rand(@$variants))];
-        $env->{'antibot.text_captcha'} = $captcha->{text};
+        $env->{'antibot.textcaptcha.text'} = $captcha->{text};
 
         my $session = Plack::Session->new($env);
         $session->set($self->{session_name}, $captcha->{answer});
@@ -38,10 +38,12 @@ sub check {
         my $expected = $session->get($self->{session_name});
         my $got      = Plack::Request->new($env)->param($self->{field_name});
 
-        return 0 unless $expected && $got && $got eq $expected;
+        unless ($expected && $got && $got eq $expected) {
+            $env->{'antibot.textcaptcha.detected'}++;
+        }
     }
 
-    return 1;
+    return;
 }
 
 1;

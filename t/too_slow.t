@@ -5,7 +5,7 @@ use Test::More;
 
 use Plack::Middleware::Antibot::TooSlow;
 
-subtest 'returns true when GET' => sub {
+subtest 'sets nothing when GET' => sub {
     my $filter = _build_filter();
 
     my $env = {
@@ -13,7 +13,9 @@ subtest 'returns true when GET' => sub {
         'psgix.session'         => {},
         'psgix.session.options' => {}
     };
-    ok $filter->check($env);
+    $filter->execute($env);
+
+    ok !$env->{'antibot.tooslow.detected'};
 };
 
 subtest 'sets session time when GET' => sub {
@@ -25,12 +27,12 @@ subtest 'sets session time when GET' => sub {
         'psgix.session.options' => {}
     };
 
-    $filter->check($env);
+    $filter->execute($env);
 
     ok $env->{'psgix.session'}->{antibot_tooslow};
 };
 
-subtest 'returns false when no session when POST' => sub {
+subtest 'sets true when no session when POST' => sub {
     my $filter = _build_filter();
 
     my $env = {
@@ -39,10 +41,12 @@ subtest 'returns false when no session when POST' => sub {
         'psgix.session.options' => {}
     };
 
-    ok !$filter->check($env);
+    $filter->execute($env);
+
+    ok $env->{'antibot.tooslow.detected'};
 };
 
-subtest 'returns false when too slow when POST' => sub {
+subtest 'sets true when too slow when POST' => sub {
     my $filter = _build_filter();
 
     my $env = {
@@ -51,10 +55,12 @@ subtest 'returns false when too slow when POST' => sub {
         'psgix.session.options' => {}
     };
 
-    ok !$filter->check($env);
+    $filter->execute($env);
+
+    ok $env->{'antibot.tooslow.detected'};
 };
 
-subtest 'returns true when not slow when POST' => sub {
+subtest 'sets false when not slow when POST' => sub {
     my $filter = _build_filter();
 
     my $env = {
@@ -63,7 +69,9 @@ subtest 'returns true when not slow when POST' => sub {
         'psgix.session.options' => {}
     };
 
-    ok $filter->check($env);
+    $filter->execute($env);
+
+    ok !$env->{'antibot.tooslow.detected'};
 };
 
 sub _build_filter {
