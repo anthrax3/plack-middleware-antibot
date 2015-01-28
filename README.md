@@ -19,6 +19,9 @@ Plack::Middleware::Antibot is a [Plack](https://metacpan.org/pod/Plack) middlewa
 submitting forms. Every filter implements its own checks, so see their
 documentation.
 
+Plack::Middleware::Antibot uses scoring system (0 to 1) to determine if the
+client is a bot. Thus it can be configured to match any needs.
+
 ## `$env`
 
 Some filters set additional `$env` keys all prefixed with `antibot.`. For
@@ -26,6 +29,11 @@ example `TextCaptcha` filter sets `antibot.text_captcha` to be shown to the
 user.
 
 ## Options
+
+### **max\_score**
+
+When accumulated score reaches this amount, no more filters are run and bot is
+detected. `0.8` by default.
 
 ### **filters**
 
@@ -40,13 +48,17 @@ To specify filter arguments instead of a filter name pass an array references:
     enable 'Antibot', filters => ['FakeField'], fall_through => 1;
 
 Sometimes it is needed to process detected bot yourself. This way in case of
-detection `$env`'s key `antibot.detected` will be set to appropriate filter.
+detection `$env`'s key `antibot.detected` will be set.
 
 ## Available filters
 
 - [Plack::Middleware::Antibot::FakeField](https://metacpan.org/pod/Plack::Middleware::Antibot::FakeField) (requires [Plack::Session](https://metacpan.org/pod/Plack::Session))
 
     Check if an invisible or hidden field is submitted.
+
+- [Plack::Middleware::Antibot::Static](https://metacpan.org/pod/Plack::Middleware::Antibot::Static) (requires [Plack::Session](https://metacpan.org/pod/Plack::Session))
+
+    Check if a static file was fetched before form submission.
 
 - [Plack::Middleware::Antibot::TextCaptcha](https://metacpan.org/pod/Plack::Middleware::Antibot::TextCaptcha) (requires [Plack::Session](https://metacpan.org/pod/Plack::Session))
 

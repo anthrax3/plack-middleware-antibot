@@ -52,6 +52,17 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/vti/plack-middleware-antibot/issues"
+      },
+      "homepage" : "https://github.com/vti/plack-middleware-antibot",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/vti/plack-middleware-antibot.git",
+         "web" : "https://github.com/vti/plack-middleware-antibot"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:VTI"
 }
