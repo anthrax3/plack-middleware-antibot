@@ -58,6 +58,10 @@ Plack::Middleware::Antibot::TooFast checks if form was submitted too fast.
 
 =head2 Options
 
+=head3 B<score>
+
+Filter's score when bot detected. C<0.8> by default.
+
 =head3 B<session_name>
 
 Session name. C<antibot_toofast> by default.

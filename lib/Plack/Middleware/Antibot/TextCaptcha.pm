@@ -15,6 +15,7 @@ sub new {
     $self->{session_name} = $params{session_name} || 'antibot_textcaptcha';
     $self->{field_name}   = $params{field_name}   || 'antibot_textcaptcha';
     $self->{variants} = $params{variants} || [{text => '2 + 2', answer => 4}];
+    $self->{score} = $params{score} || 0.9;
 
     return $self;
 }
@@ -72,6 +73,10 @@ This filter sets C<antibot.text_captcha> as captcha text. This should be shown
 to the user as a field label or description.
 
 =head2 Options
+
+=head3 B<score>
+
+Filter's score when bot detected. C<0.8> by default.
 
 =head3 B<session_name>
 

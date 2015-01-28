@@ -123,7 +123,7 @@ user.
 =head3 B<max_score>
 
 When accumulated score reaches this amount, no more filters are run and bot is
-detected.
+detected. C<0.8> by default.
 
 =head3 B<filters>
 

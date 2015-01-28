@@ -56,6 +56,10 @@ with other fields.
 
 =head2 Options
 
+=head3 B<score>
+
+Filter's score when bot detected. C<0.8> by default.
+
 =head3 B<field_name>
 
 Field name. C<antibot_fake_field> by default.

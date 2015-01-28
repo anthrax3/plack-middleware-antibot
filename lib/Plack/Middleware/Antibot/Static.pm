@@ -65,6 +65,10 @@ Plack::Middleware::Antibot::Static checks if a static-like file was fetched.
 
 =head2 Options
 
+=head3 B<score>
+
+Filter's score when bot detected. C<0.9> by default.
+
 =head3 B<session_name>
 
 Session name. C<antibot_static> by default.
