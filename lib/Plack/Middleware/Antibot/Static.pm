@@ -11,7 +11,7 @@ sub new {
     my $self = shift->SUPER::new(@_);
     my (%params) = @_;
 
-    $self->{path}         = $params{path}         || '/antibot.css';
+    $self->{path}         = $params{path}         || '/antibot.gif';
     $self->{session_name} = $params{session_name} || 'antibot_static';
     $self->{timeout}      = $params{timeout}      || 60 * 15;
     $self->{score}        = $params{score}        || 0.9;
@@ -32,6 +32,10 @@ sub execute {
 
             return [200, [], ['']];
         }
+
+        $env->{'antibot.static.path'} = $self->{path};
+        $env->{'antibot.static.html'} = qq{<img src="$self->{path}" }
+          . qq{width="1" height="1" style="display:none" />};
     }
     elsif ($env->{REQUEST_METHOD} eq 'POST') {
         my $session = Plack::Session->new($env);

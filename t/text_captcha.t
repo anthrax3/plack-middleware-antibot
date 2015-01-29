@@ -35,6 +35,7 @@ subtest 'sets env when GET' => sub {
     $filter->execute($env);
 
     is $env->{'antibot.textcaptcha.text'}, '2 + 2';
+    is $env->{'antibot.textcaptcha.field_name'}, 'antibot_textcaptcha';
 };
 
 subtest 'sets true when no session when POST' => sub {

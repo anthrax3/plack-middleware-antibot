@@ -24,12 +24,13 @@ sub execute {
     my $self = shift;
     my ($env) = @_;
 
+    my $variants = $self->{variants};
+
+    my $captcha = $variants->[int(rand(@$variants))];
+    $env->{'antibot.textcaptcha.text'} = $captcha->{text};
+    $env->{'antibot.textcaptcha.field_name'} = $self->{field_name};
+
     if ($env->{REQUEST_METHOD} eq 'GET') {
-        my $variants = $self->{variants};
-
-        my $captcha = $variants->[int(rand(@$variants))];
-        $env->{'antibot.textcaptcha.text'} = $captcha->{text};
-
         my $session = Plack::Session->new($env);
         $session->set($self->{session_name}, $captcha->{answer});
     }
@@ -42,6 +43,8 @@ sub execute {
         unless ($expected && $got && $got eq $expected) {
             $env->{'antibot.textcaptcha.detected'}++;
         }
+
+        $session->set($self->{session_name}, $captcha->{answer});
     }
 
     return;

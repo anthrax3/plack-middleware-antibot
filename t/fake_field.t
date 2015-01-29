@@ -34,6 +34,16 @@ subtest 'sets true when field present' => sub {
     ok $env->{'antibot.fakefield.detected'};
 };
 
+subtest 'sets env vars' => sub {
+    my $filter = _build_filter();
+
+    my $env = req_to_psgi GET '/';
+    $filter->execute($env);
+
+    is $env->{'antibot.fakefield.field_name'}, 'antibot_fake_field';
+    like $env->{'antibot.fakefield.html'}, qr/<label>/;
+};
+
 sub _build_filter {
     Plack::Middleware::Antibot::FakeField->new(@_);
 }

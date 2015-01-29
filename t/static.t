@@ -20,7 +20,7 @@ subtest 'sets nothing when GET' => sub {
 subtest 'returns style when GET' => sub {
     my $filter = _build_filter();
 
-    my $env = _build_env(GET '/antibot.css');
+    my $env = _build_env(GET '/antibot.gif');
 
     my $res = $filter->execute($env);
 
@@ -31,11 +31,23 @@ subtest 'returns style when GET' => sub {
 subtest 'sets session when GET' => sub {
     my $filter = _build_filter();
 
-    my $env = _build_env(GET '/antibot.css');
+    my $env = _build_env(GET '/antibot.gif');
 
     $filter->execute($env);
 
     ok $env->{'psgix.session'}->{antibot_static};
+};
+
+subtest 'sets env vars' => sub {
+    my $filter = _build_filter();
+
+    my $env = _build_env(GET '/');
+
+    $filter->execute($env);
+
+    is $env->{'antibot.static.path'}, '/antibot.gif';
+    is $env->{'antibot.static.html'},
+      '<img src="/antibot.gif" width="1" height="1" style="display:none" />';
 };
 
 subtest 'sets true when no session when POST' => sub {

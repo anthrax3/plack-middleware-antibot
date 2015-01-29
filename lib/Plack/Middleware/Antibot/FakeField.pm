@@ -22,9 +22,19 @@ sub execute {
     my ($env) = @_;
 
     if ($env->{REQUEST_METHOD} eq 'POST') {
-        if (defined Plack::Request->new($env)->param($self->{field_name})) {
+        my $value = Plack::Request->new($env)->param($self->{field_name});
+        if (defined $value && length $value) {
             $env->{'antibot.fakefield.detected'}++;
         }
+    }
+    else {
+        $env->{'antibot.fakefield.field_name'} = $self->{field_name};
+        $env->{'antibot.fakefield.html'} = <<"EOF";
+<div style="display:none">
+<label>Please leave blank</label>
+<input name="$self->{field_name}" />
+</div>
+EOF
     }
 
     return;
