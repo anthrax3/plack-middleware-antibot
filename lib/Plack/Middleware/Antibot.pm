@@ -8,6 +8,7 @@ use parent 'Plack::Middleware';
 our $VERSION = "0.01";
 
 use List::Util qw(sum reduce);
+use Plack::Util ();
 use Plack::Util::Accessor qw(filters fall_through max_score);
 
 sub prepare_app {
@@ -27,9 +28,8 @@ sub prepare_app {
         }
 
         my $filter_class = __PACKAGE__ . '::' . $filter;
-        my $filter_module = join('/', split(/::/, $filter_class)) . '.pm';
 
-        eval { require $filter_module } or die $@;
+        Plack::Util::load_class($filter_class);
 
         push @filters, $filter_class->new(@args);
     }
