@@ -82,6 +82,7 @@ sub call {
 
 1;
 __END__
+=pod
 
 =encoding utf-8
 
@@ -163,16 +164,33 @@ Check if form is submitted too slow.
 
 =back
 
-=head1 LICENSE
+=head1 ISA
 
-Copyright (C) vti.
+L<Plack::Middleware>
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+=head1 METHODS
+
+=head2 C<prepare_app>
+
+=head2 C<call($env)>
+
+=head1 INHERITED METHODS
+
+=head2 C<wrap($app, @args)>
 
 =head1 AUTHOR
 
-vti E<lt>viacheslav.t@gmail.comE<gt>
+Viacheslav Tykhanovskyi, E<lt>viacheslav.t@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2015, Viacheslav Tykhanovskyi
+
+This program is free software, you can redistribute it and/or modify it under
+the terms of the Artistic License version 2.0.
+
+This program is distributed in the hope that it will be useful, but without any
+warranty; without even the implied warranty of merchantability or fitness for
+a particular purpose.
 
 =cut
-
