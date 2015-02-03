@@ -13,7 +13,7 @@ subtest 'sets nothing when not POST' => sub {
     my $env = req_to_psgi GET '/';
     $filter->execute($env);
 
-    ok !$env->{'antibot.fakefield.detected'};
+    ok !$env->{'plack.antibot.fakefield.detected'};
 };
 
 subtest 'sets nothing when field not present' => sub {
@@ -22,7 +22,7 @@ subtest 'sets nothing when field not present' => sub {
     my $env = req_to_psgi POST '/', {foo => 'bar'};
     $filter->execute($env);
 
-    ok !$env->{'antibot.fakefield.detected'};
+    ok !$env->{'plack.antibot.fakefield.detected'};
 };
 
 subtest 'sets true when field present' => sub {
@@ -31,7 +31,7 @@ subtest 'sets true when field present' => sub {
     my $env = req_to_psgi POST '/', {antibot_fake_field => 'bar'};
     $filter->execute($env);
 
-    ok $env->{'antibot.fakefield.detected'};
+    ok $env->{'plack.antibot.fakefield.detected'};
 };
 
 subtest 'sets env vars' => sub {
@@ -40,8 +40,8 @@ subtest 'sets env vars' => sub {
     my $env = req_to_psgi GET '/';
     $filter->execute($env);
 
-    is $env->{'antibot.fakefield.field_name'}, 'antibot_fake_field';
-    like $env->{'antibot.fakefield.html'}, qr/<label>/;
+    is $env->{'plack.antibot.fakefield.field_name'}, 'antibot_fake_field';
+    like $env->{'plack.antibot.fakefield.html'}, qr/<label>/;
 };
 
 sub _build_filter {

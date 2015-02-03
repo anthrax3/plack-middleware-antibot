@@ -32,7 +32,7 @@ sub execute {
 
         my $too_slow = $session->get($self->{session_name});
         unless ($too_slow && time - $too_slow < $self->{timeout}) {
-            $env->{'antibot.tooslow.detected'}++;
+            $env->{'plack.antibot.tooslow.detected'}++;
         }
     }
 

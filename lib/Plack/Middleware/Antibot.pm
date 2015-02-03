@@ -50,7 +50,7 @@ sub call {
         return $res if $res && ref $res eq 'ARRAY';
 
         my $name = (split /::/, ref $filter)[-1];
-        my $key = 'antibot.' . lc($name) . '.detected';
+        my $key = 'plack.antibot.' . lc($name) . '.detected';
 
         if ($env->{$key}) {
             push @scores, $filter->score;
@@ -69,15 +69,12 @@ sub call {
         last if $current_score >= $self->max_score;
     }
 
-    $env->{'antibot.score'} = $current_score;
+    $env->{'plack.antibot.score'} = $current_score;
 
     if ($current_score >= $self->max_score) {
-        if ($self->fall_through) {
-            $env->{'antibot.detected'} = 1;
-        }
-        else {
-            return [400, [], ['Bad request']];
-        }
+        $env->{'plack.antibot.detected'} = 1;
+
+        return [400, [], ['Bad request']] unless $self->fall_through;
     }
 
     return $self->app->($env);

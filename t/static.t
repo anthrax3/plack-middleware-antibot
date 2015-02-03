@@ -14,7 +14,7 @@ subtest 'sets nothing when GET' => sub {
 
     $filter->execute($env);
 
-    ok !$env->{'antibot.static.detected'};
+    ok !$env->{'plack.antibot.static.detected'};
 };
 
 subtest 'returns style when GET' => sub {
@@ -45,8 +45,8 @@ subtest 'sets env vars' => sub {
 
     $filter->execute($env);
 
-    is $env->{'antibot.static.path'}, '/antibot.gif';
-    is $env->{'antibot.static.html'},
+    is $env->{'plack.antibot.static.path'}, '/antibot.gif';
+    is $env->{'plack.antibot.static.html'},
       '<img src="/antibot.gif" width="1" height="1" style="display:none" />';
 };
 
@@ -57,7 +57,7 @@ subtest 'sets true when no session when POST' => sub {
 
     $filter->execute($env);
 
-    ok $env->{'antibot.static.detected'};
+    ok $env->{'plack.antibot.static.detected'};
 };
 
 subtest 'sets true when expired when POST' => sub {
@@ -68,7 +68,7 @@ subtest 'sets true when expired when POST' => sub {
 
     $filter->execute($env);
 
-    ok $env->{'antibot.static.detected'};
+    ok $env->{'plack.antibot.static.detected'};
 };
 
 subtest 'sets nothing when POST' => sub {
@@ -79,7 +79,7 @@ subtest 'sets nothing when POST' => sub {
 
     $filter->execute($env);
 
-    ok !$env->{'antibot.static.detected'};
+    ok !$env->{'plack.antibot.static.detected'};
 };
 
 sub _build_env {

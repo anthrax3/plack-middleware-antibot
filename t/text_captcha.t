@@ -14,7 +14,7 @@ subtest 'sets nothing when GET' => sub {
 
     $filter->execute($env);
 
-    ok !$env->{'antibot.textcaptcha.detected'};
+    ok !$env->{'plack.antibot.textcaptcha.detected'};
 };
 
 subtest 'sets session when GET' => sub {
@@ -34,8 +34,8 @@ subtest 'sets env when GET' => sub {
 
     $filter->execute($env);
 
-    is $env->{'antibot.textcaptcha.text'}, '2 + 2';
-    is $env->{'antibot.textcaptcha.field_name'}, 'antibot_textcaptcha';
+    is $env->{'plack.antibot.textcaptcha.text'}, '2 + 2';
+    is $env->{'plack.antibot.textcaptcha.field_name'}, 'antibot_textcaptcha';
 };
 
 subtest 'sets true when no session when POST' => sub {
@@ -45,7 +45,7 @@ subtest 'sets true when no session when POST' => sub {
 
     $filter->execute($env);
 
-    ok $env->{'antibot.textcaptcha.detected'};
+    ok $env->{'plack.antibot.textcaptcha.detected'};
 };
 
 subtest 'sets true when no field when POST' => sub {
@@ -55,7 +55,7 @@ subtest 'sets true when no field when POST' => sub {
 
     $filter->execute($env);
 
-    ok $env->{'antibot.textcaptcha.detected'};
+    ok $env->{'plack.antibot.textcaptcha.detected'};
 };
 
 subtest 'sets true when wrong answer when POST' => sub {
@@ -65,7 +65,7 @@ subtest 'sets true when wrong answer when POST' => sub {
 
     $filter->execute($env);
 
-    ok $env->{'antibot.textcaptcha.detected'};
+    ok $env->{'plack.antibot.textcaptcha.detected'};
 };
 
 subtest 'sets nothing when POST' => sub {
@@ -78,7 +78,7 @@ subtest 'sets nothing when POST' => sub {
 
     $filter->execute($env);
 
-    ok !$env->{'antibot.textcaptcha.detected'};
+    ok !$env->{'plack.antibot.textcaptcha.detected'};
 };
 
 sub _build_env {

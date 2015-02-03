@@ -15,7 +15,7 @@ sub new {
     $self->{session_name} = $params{session_name} || 'antibot_textcaptcha';
     $self->{field_name}   = $params{field_name}   || 'antibot_textcaptcha';
     $self->{variants} = $params{variants} || [{text => '2 + 2', answer => 4}];
-    $self->{score} = $params{score} || 0.9;
+    $self->{score}    = $params{score}    || 0.9;
 
     return $self;
 }
@@ -27,8 +27,8 @@ sub execute {
     my $variants = $self->{variants};
 
     my $captcha = $variants->[int(rand(@$variants))];
-    $env->{'antibot.textcaptcha.text'} = $captcha->{text};
-    $env->{'antibot.textcaptcha.field_name'} = $self->{field_name};
+    $env->{'plack.antibot.textcaptcha.text'}       = $captcha->{text};
+    $env->{'plack.antibot.textcaptcha.field_name'} = $self->{field_name};
 
     if ($env->{REQUEST_METHOD} eq 'GET') {
         my $session = Plack::Session->new($env);
@@ -41,7 +41,7 @@ sub execute {
         my $got      = Plack::Request->new($env)->param($self->{field_name});
 
         unless ($expected && $got && $got eq $expected) {
-            $env->{'antibot.textcaptcha.detected'}++;
+            $env->{'plack.antibot.textcaptcha.detected'}++;
         }
 
         $session->set($self->{session_name}, $captcha->{answer});

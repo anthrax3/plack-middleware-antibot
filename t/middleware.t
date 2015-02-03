@@ -46,7 +46,7 @@ subtest 'init filters with params' => sub {
 };
 
 subtest 'returns 200 and set env on fall through' => sub {
-    my $app = sub { [200, [], [$_[0]->{'antibot.detected'}]] };
+    my $app = sub { [200, [], [$_[0]->{'plack.antibot.detected'}]] };
 
     $app = builder {
         enable 'Antibot',
@@ -65,7 +65,7 @@ subtest 'returns 200 and set env on fall through' => sub {
 };
 
 subtest 'not set env when custom response' => sub {
-    my $app = sub { [200, [], [$_[0]->{'antibot.detected'}]] };
+    my $app = sub { [200, [], [$_[0]->{'plack.antibot.detected'}]] };
 
     $app = builder {
         enable 'Session::Cookie', secret  => 123;
@@ -83,7 +83,7 @@ subtest 'not set env when custom response' => sub {
 };
 
 subtest 'sets single filter score' => sub {
-    my $app = sub { [200, [], [$_[0]->{'antibot.score'}]] };
+    my $app = sub { [200, [], [$_[0]->{'plack.antibot.score'}]] };
 
     $app = builder {
         enable 'Antibot',
@@ -101,7 +101,7 @@ subtest 'sets single filter score' => sub {
 };
 
 subtest 'sets multiple filter score' => sub {
-    my $app = sub { [200, [], [$_[0]->{'antibot.score'}]] };
+    my $app = sub { [200, [], [$_[0]->{'plack.antibot.score'}]] };
 
     $app = builder {
         enable 'Session::Cookie', secret => 123;

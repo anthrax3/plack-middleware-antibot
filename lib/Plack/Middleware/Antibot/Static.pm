@@ -33,8 +33,8 @@ sub execute {
             return [200, [], ['']];
         }
 
-        $env->{'antibot.static.path'} = $self->{path};
-        $env->{'antibot.static.html'} = qq{<img src="$self->{path}" }
+        $env->{'plack.antibot.static.path'} = $self->{path};
+        $env->{'plack.antibot.static.html'} = qq{<img src="$self->{path}" }
           . qq{width="1" height="1" style="display:none" />};
     }
     elsif ($env->{REQUEST_METHOD} eq 'POST') {
@@ -42,7 +42,7 @@ sub execute {
 
         my $static_fetched = $session->get($self->{session_name});
         unless ($static_fetched && time - $static_fetched < $self->{timeout}) {
-            $env->{'antibot.static.detected'}++;
+            $env->{'plack.antibot.static.detected'}++;
         }
     }
 

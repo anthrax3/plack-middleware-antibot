@@ -15,7 +15,7 @@ subtest 'sets nothing when GET' => sub {
     };
     $filter->execute($env);
 
-    ok !$env->{'antibot.tooslow.detected'};
+    ok !$env->{'plack.antibot.tooslow.detected'};
 };
 
 subtest 'sets session time when GET' => sub {
@@ -43,7 +43,7 @@ subtest 'sets true when no session when POST' => sub {
 
     $filter->execute($env);
 
-    ok $env->{'antibot.tooslow.detected'};
+    ok $env->{'plack.antibot.tooslow.detected'};
 };
 
 subtest 'sets true when too slow when POST' => sub {
@@ -57,7 +57,7 @@ subtest 'sets true when too slow when POST' => sub {
 
     $filter->execute($env);
 
-    ok $env->{'antibot.tooslow.detected'};
+    ok $env->{'plack.antibot.tooslow.detected'};
 };
 
 subtest 'sets false when not slow when POST' => sub {
@@ -71,7 +71,7 @@ subtest 'sets false when not slow when POST' => sub {
 
     $filter->execute($env);
 
-    ok !$env->{'antibot.tooslow.detected'};
+    ok !$env->{'plack.antibot.tooslow.detected'};
 };
 
 sub _build_filter {
