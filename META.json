@@ -1,12 +1,12 @@
 {
    "abstract" : "Prevent bots from submitting forms",
    "author" : [
-      "vti <viacheslav.t@gmail.com>"
+      "Viacheslav Tykhanovskyi, <viacheslav.t@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.1.1, CPAN::Meta::Converter version 2.142690",
+   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.142690",
    "license" : [
-      "perl_5"
+      "artistic_2"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",

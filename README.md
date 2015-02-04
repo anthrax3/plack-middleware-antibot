@@ -72,13 +72,31 @@ detection `$env`'s key `antibot.detected` will be set.
 
     Check if form is submitted too slow.
 
-# LICENSE
+# ISA
 
-Copyright (C) vti.
+[Plack::Middleware](https://metacpan.org/pod/Plack::Middleware)
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+# METHODS
+
+## `prepare_app`
+
+## `call($env)`
+
+# INHERITED METHODS
+
+## `wrap($app, @args)`
 
 # AUTHOR
 
-vti <viacheslav.t@gmail.com>
+Viacheslav Tykhanovskyi, <viacheslav.t@gmail.com>
+
+# COPYRIGHT AND LICENSE
+
+Copyright (C) 2015, Viacheslav Tykhanovskyi
+
+This program is free software, you can redistribute it and/or modify it under
+the terms of the Artistic License version 2.0.
+
+This program is distributed in the hope that it will be useful, but without any
+warranty; without even the implied warranty of merchantability or fitness for
+a particular purpose.
