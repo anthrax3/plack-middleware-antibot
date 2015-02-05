@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Plack::Middleware';
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 use List::Util qw(sum reduce);
 use Plack::Util ();
